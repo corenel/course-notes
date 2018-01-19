@@ -1,0 +1,185 @@
+% !TEX program = xelatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[twoside]{article}
+\setlength{\oddsidemargin}{0.25 in}
+\setlength{\evensidemargin}{-0.25 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+
+%
+% ADD PACKAGES here:
+%
+
+\usepackage{xeCJK}
+\usepackage{amsmath,amsfonts,amsthm,graphicx}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{color}   %May be necessary if you want to color links
+\usepackage{hyperref}
+\usepackage{mleftright}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    linkcolor=red,  %choose some color if you want links to stand out
+}
+
+%
+% The following commands set up the lecnum (lecture number)
+% counter and make various numbering schemes work relative
+% to the lecture number.
+%
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum-\arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+%
+% The following macro is used to generate the header.
+%
+\newcommand{\lecture}[4]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{lecnum}{#1}
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf 矩阵论
+    \hfill Winter 2017} }
+       \vspace{4mm}
+       \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
+       \vspace{2mm}
+       \hbox to 6.28in { \textit{Lecturer: #3 \hfill Scribes: #4} }
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{Lecture #1: #2}{Lecture #1: #2}
+}
+% Use these for theorems, lemmas, proofs, etc.
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{proposition}{命题}[section]
+\newtheorem{claim}{Claim}[section]
+\newtheorem{corollary}{推论}[section]
+\newtheorem{definition}{定义}[section]
+% \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
+
+% **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\begin{document}
+%FILL IN THE RIGHT INFO.
+%\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
+\lecture{0}{预备知识: 群, 环, 域及线性空间}{Jun Wu}{Yusu Pan}
+%\footnotetext{These notes are partially based on those of Nigel Mansell.}
+
+% **** YOUR NOTES GO HERE:
+
+% Some general latex examples and examples making use of the
+% macros follow.
+%**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
+%**** ARE NEVER READ BY ANYBODY.
+
+\begin{definition}
+  (二元运算/代数运算)
+\end{definition}
+
+\begin{definition}
+  (半群) 满足结合律
+  \begin{equation}
+    a\circ (b\circ c) = (a\circ b) \circ c
+  \end{equation}
+\end{definition}
+
+\begin{definition}
+  (单位元)
+  \begin{equation}
+    a\circ e = e \circ a = a
+  \end{equation}
+\end{definition}
+
+\paragraph{可逆}
+\begin{equation}
+  \exists a'\in S, a'\circ a = a\circ a=e
+\end{equation}
+% paragraph 可逆 (end)
+
+\begin{definition}
+  (群)
+  \begin{itemize}
+    \item 半群 (结合律)
+    \item 单位元
+    \item 可逆
+  \end{itemize}
+\end{definition}
+
+\begin{definition}
+  (交换半群)
+  \begin{equation}
+    a\circ b = b\circ a
+  \end{equation}
+\end{definition}
+
+\begin{definition}
+  (交换群/Abel群)
+\end{definition}
+\begin{itemize}
+  \item 加法, 交换群又称加法群$(S, +)$
+  \item 零元, 非零元
+  \item 乘法: 半群的运算
+\end{itemize}
+
+\begin{definition}
+  (环)
+  \begin{itemize}
+    \item $(S, +)$是交换群
+    \item $(S, \cdot)$是半群
+    \item 对$+$分配律成立
+      \begin{equation}
+        a(b+c)=ab+ac, (b+c)a=ba+ca
+      \end{equation}
+  \end{itemize}
+\end{definition}
+\begin{itemize}
+  \item 有单位元的环
+  \item 交换环
+\end{itemize}
+
+\begin{definition}
+  (域)
+  \begin{itemize}
+    \item $(S,+,\cdot)$是有单位元的交换环
+    \item $\forall a\ne 0, \exists a'\in S, a'a=1, aa'=1$
+  \end{itemize}
+\end{definition}
+
+\begin{definition}
+  (域$\mathbb{P}$上的线性空间/向量空间$S$)
+\end{definition}
+\begin{itemize}
+  \item 零向量
+\end{itemize}
+
+\begin{definition}
+  (线性相关与线性无关)
+\end{definition}
+
+\begin{definition}
+  (基)
+\end{definition}
+
+\begin{definition}
+  (维数)
+\end{definition}
+\end{document}
+

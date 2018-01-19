@@ -1,0 +1,367 @@
+% !TEX program = xelatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[twoside]{article}
+\setlength{\oddsidemargin}{0.25 in}
+\setlength{\evensidemargin}{-0.25 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+
+%
+% ADD PACKAGES here:
+%
+
+\usepackage{xeCJK}
+\usepackage{amsmath,amsfonts,amsthm,graphicx}
+\usepackage{mathtools}
+\usepackage{color}   %May be necessary if you want to color links
+% \usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{mleftright}
+% \hypersetup{
+    % colorlinks=true, %set true if you want colored links
+    % linktoc=all,     %set to all if you want both sections and subsections linked
+    % linkcolor=red,  %choose some color if you want links to stand out
+% }
+
+%
+% The following commands set up the lecnum (lecture number)
+% counter and make various numbering schemes work relative
+% to the lecture number.
+%
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum-\arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+%
+% The following macro is used to generate the header.
+%
+\newcommand{\lecture}[4]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{lecnum}{#1}
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf 科学与工程计算方法
+        \hfill Winter 2017} }
+       \vspace{4mm}
+       \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
+       \vspace{2mm}
+       \hbox to 6.28in { \textit{Lecturer: #3 \hfill Scribes: #4} }
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{Lecture #1: #2}{Lecture #1: #2}
+}
+% Use these for theorems, lemmas, proofs, etc.
+\newtheorem{theorem}{定理}[section]
+\newtheorem{algo}{算法}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{proposition}{命题}[section]
+\newtheorem{claim}{Claim}[section]
+\newtheorem{corollary}{推论}[section]
+\newtheorem{definition}{定义}[section]
+\newtheorem{eg}{例}[section]
+% \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
+
+% **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\begin{document}
+%FILL IN THE RIGHT INFO.
+%\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
+\lecture{5}{数值积分和数值微分}{Zhitao Liu}{Yusu Pan}
+%\footnotetext{These notes are partially based on those of Nigel Mansell.}
+
+% **** YOUR NOTES GO HERE:
+
+% Some general latex examples and examples making use of the
+% macros follow.  
+%**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
+%**** ARE NEVER READ BY ANYBODY.
+
+\section{引言}
+\begin{itemize}
+  \item \textit{微分方程初值问题}
+    \begin{equation}
+      \begin{aligned}
+        \begin{cases}{}
+          \frac{dy}{dx}=f(x,y) \\
+          y(x_0)=y_0
+        \end{cases}
+        \\
+        y(x)=y_0 + \int_{x_0}^x f(x,y)dx
+      \end{aligned}
+    \end{equation}
+  \item 求积节点$x_k$, 求积系数$A_k$, 近似求积公式$I_n(f)$
+    \begin{equation}
+      I_n(f)=\sum^n_{k=0} A_k f(x_k)
+    \end{equation}
+\end{itemize}
+% section 引言 (end)
+
+\section{梯形公式和Simpson求积公式}
+\subsection{梯形公式和Simpson公式}
+\paragraph{梯形公式}
+(用1次Lagrange插值多项式近似代替被积函数$f(x)$)
+\begin{equation}
+  \begin{aligned}
+    T_1 &= \frac{b-a}{2} (f(a) + f(b))
+    R_{T_1} (f) = -\frac{h^3}{12}f''(\eta), \eta\in(a,b)
+  \end{aligned}
+\end{equation}
+% paragraph 梯形公式 (end)
+\paragraph{Simpson求积公式}
+(用2次Lagrange插值多项式近似代替被积函数$f(x)$)
+\begin{equation}
+  S_1 = \int^b_a L_2(x)dx = \frac{h}{3} \left(f(a) + 4f(\frac{a+b}{2}) + f(b) \right)
+\end{equation}
+% paragraph Simpson求积公式 (end)
+\begin{definition}
+  (代数精确度)
+\end{definition}
+\begin{eg}
+  (求求积公式与余项中的待定系数, 并给出代数精度)
+  \begin{itemize}
+    \item 求积公式中代入$f(x)=1, x, x^2$, 求求积公式中的待定系数
+    \item 求积公式中代入$f(x)=x^3$, 观察求积公式两边是否相等
+    \item 带余项的求积公式中代入$f(x)=x^3$, 求余项中的待定系数
+  \end{itemize}
+\end{eg}
+\paragraph{插值型求积公式}
+\begin{equation}
+  I_n(f) = \sum^n_{k=0} A_k f(x_k)
+\end{equation}
+% paragraph 插值型求积公式 (end)
+\begin{theorem}
+  (等距节点的插值型求积公式)
+\end{theorem}
+% subsection 梯形公式和Simpson公式 (end)
+\subsection{复化梯形公式和复化Simpson公式}
+\paragraph{复化梯形公式}
+\begin{equation}
+  \begin{aligned}
+    T_n(f) &= \frac{h}{2} + \left[ f(a) + 2\sum^{n-1}_{k=1} f(a+kh) + f(b)  \right]\\
+    R_{T_n} &= - \frac{(b-a)h^2}{12} f''(\eta), \eta\in(a,b)
+  \end{aligned}
+\end{equation}
+% paragraph 复化梯形公式 (end)
+\paragraph{复化Simpson公式}
+\begin{equation}
+  \begin{aligned}
+    S_n(f) &= \frac{h}{3} \left( f(a) + 4\sum^{n-1}_{k=0} f(a+(2k+1)h) + 2\sum^{n-1}_{k=1} f(a+kh) + f(b) \right)\\
+    R_{S_n} &= - \frac{(b-a)h^4}{180} f^{(4)}(\eta), \eta\in(a,b)
+  \end{aligned}
+\end{equation}
+% paragraph 复化Simpson公式 (end)
+\begin{eg}
+  (用复化梯形公式和复化Simpson公式的余项计算需要的节点数)
+\end{eg}
+\begin{definition}
+  ($p$阶收敛)
+  \begin{itemize}
+    \item 复化梯形公式2阶收敛, 复化Simpson公式4阶收敛.
+  \end{itemize}
+\end{definition}
+\begin{definition}
+  (黎曼可积)
+\end{definition}
+\begin{theorem}
+  (复化梯形公式与复化Simpson公式黎曼可积)
+\end{theorem}
+% subsection 复化梯形公式和复化Simpson公式 (end)
+% section 梯形公式和Simpson求积公式 (end)
+
+\section{Gauss求积公式}
+\begin{definition}
+  (Gauss求积公式)
+  $n+1$个互异节点, $n+1$个求积系数, $2n+1$代数精度
+\end{definition}
+\subsection{Gauss点与正交多项式零点的关系}
+\begin{theorem}
+  (Gauss点的充要条件)
+\end{theorem}
+\begin{lemma}
+  ($(a,b)$上带权$\rho(x)$的正交多项式$\varphi_{n+1}(x)$的零点就是Gauss点)
+\end{lemma}
+\begin{eg}
+  (求使公式为Gauss求积公式的节点与系数)
+  \begin{itemize}
+    \item 构造$\{\varphi_j(x)\}$, 用正交性求待定系数 ($\int_0^1 \sqrt{1-x}(x+a)$怎么算?换元)
+    \item 用$\{\varphi_j(x)\}$的零点求节点
+    \item 用$f(x)=1, x$求Gauss求积公式的待定系数
+  \end{itemize}
+\end{eg}
+% subsection Gauss点与正交多项式零点的关系 (end)
+\subsection{常用的Gauss型求积公式}
+\subsubsection{Gauss-Legendre公式}
+\paragraph{Gauss-Legendre公式}
+\begin{equation}
+  \int^1_{-1} f(x) \approx \sum^n_{k=0} A_k f(x_k)
+\end{equation}
+% paragraph Gauss-Legendre公式 (end)
+\begin{table}[htbp]
+  \centering
+  \caption{Gauss-Legendre公式的求积节点和求积系数}
+  \begin{tabular}{cccc}
+    \toprule
+    $n$ & 点数 & $x_k$ & $A_k$ \\
+    $1$ & $2$  & $\pm 1/\sqrt{3}$ & $1.0$ \\
+    $2$ & $3$  & $\pm 1/\sqrt{3/5},0$ & $5/9, 8/9$ \\
+    $3$ & $4$  & $\pm 0.861136, \pm 0.339981$ & $ 0.347855, 0.652145$\\
+    $4$ & $5$  & $\pm 0.906180, \pm 0.538469$ & $0.236927, 0.478629, 0.568889$ \\
+  \end{tabular}
+\end{table}
+\begin{eg}
+  (构造Gauss-Legendre公式)
+  \begin{itemize}
+    \item 变量替换$x=(a+b)/2 + (b-a)t/2$
+      \begin{equation}
+        \begin{aligned}
+          \int^b_a f(x)dx &= \frac{b-a}{2} \int^1_{-1} f(\frac{(a+b)}{2} + \frac{b-a}{2}t)dt \\
+                          &\approx \frac{b-a}{2} \sum^n_{k=0} A_k f(\frac{(a+b)}{2} + \frac{b-a}{2}t_k)
+        \end{aligned}
+      \end{equation}
+  \end{itemize}
+\end{eg}
+\paragraph{复化Gauss-Legendre求积公式}
+\begin{itemize}
+  \item I型
+    \begin{equation}
+      \int^a_b f(x)dx \approx \frac{h}{2} \sum^{n-1}_{k=0} [f(x_{k+\frac{1}{2}} - \frac{h}{2\sqrt{3}}) + f(x_{k+\frac{1}{2}} + \frac{h}{2\sqrt{3}})]
+    \end{equation}
+  \item II型
+\end{itemize}
+% paragraph 复化Gauss-Legendre求积公式 (end)
+\begin{eg}
+  (用3段4点复化梯形公式, 2段5点复化Simpson公式, 4点Gauss-Legendre公式和2段Gauss-Legendre I型求积公式计算)
+\end{eg}
+% subsubsection Gauss-Legendre公式 (end)
+\subsubsection{Gauss-Chebyshev求积公式}
+(求积公式与相应的零点)
+% subsubsection Gauss-Chebyshev求积公式 (end)
+% subsection 常用的Gauss型求积公式 (end)
+\subsection{Gauss公式的余项}
+\begin{theorem}
+  (Gauss求积公式的余项)
+\end{theorem}
+% subsection Gauss公式的余项j (end)
+\begin{theorem}
+  (求积公式数值稳定的定义)
+\end{theorem}
+\begin{theorem}
+  (Gauss求积公式数值稳定)
+\end{theorem}
+\begin{theorem}
+  (Gauss求积公式收敛)
+\end{theorem}
+\subsection{Gauss求积公式的数值稳定性和收敛性}
+% subsection Gauss求积公式的数值稳定性和收敛性 (end)
+% section Gauss求积公式 (end)
+
+\section{数值微分}
+\begin{itemize}
+  \item 对于一阶导数
+    \begin{itemize}
+      \item 一次差商或线性插值: $h$精度
+      \item 中心差商或二次插值: $h^2$精度
+      \item 三次样条: $h^3$精度
+      \item 隐式差分: $h^4$精度
+    \end{itemize}
+  \item 对于二阶导数
+    \begin{itemize}
+      \item 二次中心差商或二次插值: $h^2$精度
+      \item 三次样条: $h^2$精度
+      \item 隐式差分: $h^4$精度
+    \end{itemize}
+\end{itemize}
+\subsection{Taylor展开法}
+\begin{itemize}
+  \item 向前差商, 向后差商, 中心差商
+  \item 求解各节点上一阶与二阶导数近似值的隐式方法
+    \begin{equation}
+      \begin{aligned}
+        G_1m&=f_1 \\
+        G_2M&=f_2
+      \end{aligned}
+    \end{equation}
+\end{itemize}
+% subsection Taylor展开法 (end)
+\subsection{插值型求导公式}
+\begin{itemize}
+  \item 插值型求导公式, 余项
+  \item 三点公式, 五点公式
+\end{itemize}
+% subsection 插值型求导公式 (end)
+\subsection{三次样条求导}
+三次样条插值函数$S(x)$
+% subsection 三次样条求导 (end)
+% section 数值微分 (end)
+
+\section{外推技巧和自适应技术}
+\subsection{外推原理}
+\begin{equation}
+  F_1(h)=\frac{2F(h/2)-F(h)}{2-1}=F(0)+b_2h^2 + b_3h^3+\cdots
+\end{equation}
+\paragraph{Richaegson外推法}
+\begin{equation}
+  \begin{aligned}
+    F(h)-F(0)&=a_p h^p + O(h^s), s>p \\
+    F_1(h) &= \frac{q^pF(h/q)-F(h)}{q^p-1}
+  \end{aligned}
+\end{equation}
+\begin{theorem}
+\end{theorem}
+% paragraph Richaegson外推法 (end)
+% subsection 外推原理 (end)
+\subsection{数值微分的外推算法}
+\begin{eg}
+  (中心差商的外推)
+  \begin{equation}
+    \begin{aligned}
+      G(x,h) &= \frac{f(x+h)-f(x-h)}{2h} \\
+      G_1(h)&=G(x_n,h) \\
+      G_{k+1}(h)&=\frac{4^k G_k(h/2)-G_k(h)}{4^k -1}
+    \end{aligned}
+  \end{equation}
+\end{eg}
+% subsection 数值微分的外推算法 (end)
+\subsection{数值积分的Romberg算法}
+\begin{eg}
+  (Romberg算法)
+  \begin{equation}
+    \begin{cases}{}
+      T^{(0)}_1 &= \frac{b-a}{2}[f(a)+f(b)] \\
+      T^{(l)}_1 &= \frac{1}{2} [T^{(l-1)}_1 + \frac{b-a}{2^{l-1}} \sum^{2^{l-1}}_{i=1} f(a+(2i-1)\frac{b-a}{2^l})] \\
+      T^{(k-1)}_{m+1} &= \frac{4^m T^{(k)}_m - T^{(k-1)}_m}{4^m-1}
+    \end{cases}
+  \end{equation}
+
+\end{eg}
+% subsection 数值积分的Romberg算法 (end)
+\subsection{自动变步长Simpson方法和自适应Simpson方法}
+\begin{itemize}
+  \item 自动变步长Simpson方法
+  \item 自适应Simpson方法
+\end{itemize}
+
+% subsection 自动变步长Simpson方法和自适应Simpson方法 (end)
+% section 外推技巧和自适应技术 (end)
+
+\section{应用例题}
+\begin{eg}
+\end{eg}
+% section 应用例题 (end)
+\end{document}

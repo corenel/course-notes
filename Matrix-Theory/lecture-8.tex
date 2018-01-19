@@ -1,0 +1,347 @@
+% !TEX program = xelatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[twoside]{article}
+\setlength{\oddsidemargin}{0.25 in}
+\setlength{\evensidemargin}{-0.25 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+
+%
+% ADD PACKAGES here:
+%
+
+\usepackage{xeCJK}
+\usepackage{amsmath,amsfonts,amsthm,graphicx}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{color}   %May be necessary if you want to color links
+\usepackage{hyperref}
+\usepackage{mleftright}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    linkcolor=red,  %choose some color if you want links to stand out
+}
+
+%
+% The following commands set up the lecnum (lecture number)
+% counter and make various numbering schemes work relative
+% to the lecture number.
+%
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum-\arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+%
+% The following macro is used to generate the header.
+%
+\newcommand{\lecture}[4]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{lecnum}{#1}
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf 矩阵论
+    \hfill Winter 2017} }
+       \vspace{4mm}
+       \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
+       \vspace{2mm}
+       \hbox to 6.28in { {\it Lecturer: #3 \hfill Scribes: #4} }
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{Lecture #1: #2}{Lecture #1: #2}
+}
+%
+% Convention for citations is authors' initials followed by the year.
+% For example, to cite a paper by Leighton and Maggs you would type
+% \cite{LM89}, and to cite a paper by Strassen you would type \cite{S69}.
+% (To avoid bibliography problems, for now we redefine the \cite command.)
+% Also commands that create a suitable format for the reference list.
+\renewcommand{\cite}[1]{[#1]}
+\def\beginrefs{\begin{list}%
+        {[\arabic{equation}]}{\usecounter{equation}
+         \setlength{\leftmargin}{2.0truecm}\setlength{\labelsep}{0.4truecm}%
+         \setlength{\labelwidth}{1.6truecm}}}
+\def\endrefs{\end{list}}
+\def\bibentry#1{\item[\hbox{[#1]}]}
+
+%Use this command for a figure; it puts a figure in wherever you want it.
+%usage: \fig{NUMBER}{SPACE-IN-INCHES}{CAPTION}
+\newcommand{\fig}[3]{
+  \vspace{#2}
+  \begin{center}
+  Figure \thelecnum.#1:~#3
+  \end{center}
+}
+% Use these for theorems, lemmas, proofs, etc.
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{proposition}{命题}[section]
+\newtheorem{claim}{Claim}[section]
+\newtheorem{corollary}{推论}[section]
+\newtheorem{definition}{定义}[section]
+% \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
+
+% **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\begin{document}
+%FILL IN THE RIGHT INFO.
+%\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
+\lecture{8}{广义逆矩阵}{Zhitao Liu}{Yusu Pan}
+%\footnotetext{These notes are partially based on those of Nigel Mansell.}
+
+% **** YOUR NOTES GO HERE:
+
+% Some general latex examples and examples making use of the
+% macros follow.
+%**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
+%**** ARE NEVER READ BY ANYBODY.
+
+\section*{考试与作业}
+\paragraph{考试}
+\begin{itemize}
+    \item 题型:选择, 填空, 大题
+    \item 共9题
+    \item 大题有证明题，主要是第六章(注意)与第八章
+    \item 群环域等预备知识均在期末考试范围内
+    \item 注意掌握课后习题的类型, 题型是一致的(例如$e^{At}$以及$A^+$的计算), 数字会变化 
+    \item 可以带计算器
+\end{itemize}
+
+\paragraph{作业}
+\begin{itemize}
+    \item P247Q9(1)(3)
+    \item P247Q15(1)
+\end{itemize}
+
+\section{广义逆矩阵的概念}
+\paragraph{Penrose方程}
+\begin{equation*}
+    \begin{aligned}
+        & AGA = A \\
+        & GAG = G \\
+        & (AG)^T = AG \
+        & (GA)^T = GA
+    \end{aligned}
+\end{equation*}
+
+\begin{definition}
+(广义逆矩阵的定义)
+\end{definition}
+
+广义逆的种类
+
+\section{广义逆矩阵$A^-$与线性方程组的解}
+\begin{equation*}
+    \begin{aligned}
+        & AGA = A \\
+    \end{aligned}
+\end{equation*}
+
+\begin{theorem}
+($A^-$的计算)
+\end{theorem}
+\begin{proof}
+\begin{equation}
+    \begin{aligned}
+        AGA &= AQ[\cdots]PA \\
+        & = P{^-1} [\cdots][\cdots][\cdots]Q^{-1} \\
+        & = P^{-1} [\cdots] Q^{-1}\\
+        & =A
+    \end{aligned}
+\end{equation}
+\end{proof}
+注意$A^-$并不唯一
+
+\begin{theorem}
+($A^-$的性质)
+\end{theorem}
+\begin{proof}
+\begin{equation}
+    \begin{aligned}
+        & BGB = B \\
+        & G =Q^{-1} A^- P^{-1} \\
+        & BQ^{-1}AP^{-1}B = PAQQ^{-1}AP^{-1}PAQ=B
+    \end{aligned}
+\end{equation}
+\end{proof}
+注意$A^-$与$P^{-1}$在写法上的区别
+
+\begin{theorem}
+(相容方程组的解)
+\end{theorem}
+相容方程组$Ax=b$即为有解的方程组, $rank([A|b]) = rank(A)$, 解不一定唯一.
+
+\begin{theorem}
+(Penrose定理/矩阵方程$AXB=C$的通解)
+
+设$A$,$B$,$C$分别为$m\times n$, $p\times q$, $m\times q$矩阵, 则矩阵方程
+\begin{equation*}
+    AXB=C
+\end{equation*}
+有解的充分必要条件是
+\begin{equation*}
+    AA^-CB^-B=C
+\end{equation*}
+并且在有解的情况下, 其通解为
+\begin{equation*}
+    X=A^-CB^-+Y-A^-AYBB^-
+\end{equation*}
+其中$Y\in \mathds{R}^{n\times p}$是任意的矩阵
+\end{theorem}
+
+\begin{theorem}
+(线性方程组$Ax=b$的通解)
+\end{theorem}
+
+\begin{theorem}
+($A\{1\}$的通式)
+\end{theorem}
+
+\section{极小范数广义逆$A_m^-$与线性方程组的极小范数解}
+\begin{equation*}
+    \begin{aligned}
+        & AGA = A \\
+        & (GA)^T = GA
+    \end{aligned}
+\end{equation*}
+
+\begin{theorem}
+($G\in A\{1,4\}$的充要条件1)
+\end{theorem}
+
+\begin{theorem}
+($G\in A\{1,4\}$的充要条件2)
+\end{theorem}
+
+\begin{theorem}
+($A\{1,4\}$的通式1)
+\end{theorem}
+
+\begin{theorem}
+($A\{1,4\}$的通式2)
+\end{theorem}
+
+\begin{theorem}
+(相容方程组$Ax=b$的极小范数解)
+\end{theorem}
+\begin{proof}
+\begin{equation*}
+    \begin{aligned}
+        & Ax=b, & A\in\mathds{R}^{m\times n} \\
+        & x = Gb + (I-GA)y, & AGA=A \\
+        & x^* = G^*b + (I-G^*A)y, & AG^*A=A, (G^*A)^T=G^*A
+    \end{aligned}
+\end{equation*}
+\end{proof}
+
+\begin{theorem}
+(相容方程组$Ax=b$的极小范数解的唯一性)
+\end{theorem}
+
+\section{最小二乘广义逆$A^-_l$与矛盾方程组的最小二乘解}
+\begin{equation*}
+    \begin{aligned}
+        & AGA = A \\
+        & (AG)^T = AG
+    \end{aligned}
+\end{equation*}
+
+\begin{theorem}
+($G\in A\{1,3\}$的充要条件1)
+\end{theorem}
+
+\begin{theorem}
+($G\in A\{1,3\}$的充要条件2)
+\end{theorem}
+
+\begin{theorem}
+(最小二乘逆1)
+\end{theorem}
+
+\begin{theorem}
+(最小二乘逆2)
+\end{theorem}
+
+\paragraph{线性最小二乘问题}
+如果线性方程组$Ax=b$不相容, 则它没有通常意义下的解,残量不等于零. 求这样的解, 使它的残量范数最小.
+
+即求在上的最佳逼近
+满足上式的...
+
+\begin{theorem}
+(线性方程组$Ax=b$的最小二乘解)
+\end{theorem}
+
+\begin{theorem}
+不相容线性方程组$Ax=b$的最小二乘解必为相容线性方程组$A^T Ax=A^T b$的解, 反之亦然.
+\end{theorem}
+
+\begin{corollary}
+(线性方程组$Ax=b$的最小二乘解的唯一性)
+当$A$为列满秩时, 不相容方程组$Ax=b$的最小二乘解是唯一的.
+\end{corollary}
+
+\begin{theorem}
+(线性方程组$Ax=b$的最小二乘解的通式)
+\end{theorem}
+
+\section{广义逆矩阵$A^+$与线性方程组的极小最小二乘解}
+\begin{equation*}
+    \begin{aligned}
+        & AGA = A \\
+        & GAG = G \\
+        & (AG)^T = AG \\
+        & (GA)^T = GA
+    \end{aligned}
+\end{equation*}
+
+\begin{theorem}
+($A^+$的唯一性)
+\end{theorem}
+
+\begin{theorem}
+(通过满秩分解求$A^+$)
+设$A$是$m\times n$, 其满秩分解为
+\begin{equation*}
+    A=BC
+\end{equation*}
+其中, 则
+\begin{equation*}
+    A^+ = C^T (CC^T)^{-1} (B^TB)^{-1} B^T
+\end{equation*}
+\end{theorem}
+
+\begin{theorem}
+($A^+$的性质)
+\end{theorem}
+
+\begin{theorem}
+(线性方程组$Ax=b$的通解)
+\end{theorem}
+
+\begin{theorem}
+(不相容线性方程组$Ax=b$的最小二乘通解)
+\end{theorem}
+
+\begin{theorem}
+(不相容线性方程组$Ax=b$的极小最小二乘解)
+\end{theorem}
+
+\end{document}
+

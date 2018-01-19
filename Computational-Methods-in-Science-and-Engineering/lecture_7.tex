@@ -1,0 +1,196 @@
+% !TEX program = xelatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[twoside]{article}
+\setlength{\oddsidemargin}{0.25 in}
+\setlength{\evensidemargin}{-0.25 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+
+%
+% ADD PACKAGES here:
+%
+
+\usepackage{xeCJK}
+\usepackage{amsmath,amsfonts,amsthm,graphicx}
+\usepackage{mathtools}
+\usepackage{color}   %May be necessary if you want to color links
+\usepackage{hyperref}
+\usepackage{mleftright}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    linkcolor=red,  %choose some color if you want links to stand out
+}
+
+%
+% The following commands set up the lecnum (lecture number)
+% counter and make various numbering schemes work relative
+% to the lecture number.
+%
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum-\arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+%
+% The following macro is used to generate the header.
+%
+\newcommand{\lecture}[4]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{lecnum}{#1}
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf 科学与工程计算方法
+        \hfill Winter 2017} }
+       \vspace{4mm}
+       \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
+       \vspace{2mm}
+       \hbox to 6.28in { {\it Lecturer: #3 \hfill Scribes: #4} }
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{Lecture #1: #2}{Lecture #1: #2}
+}
+%
+% Convention for citations is authors' initials followed by the year.
+% For example, to cite a paper by Leighton and Maggs you would type
+% \cite{LM89}, and to cite a paper by Strassen you would type \cite{S69}.
+% (To avoid bibliography problems, for now we redefine the \cite command.)
+% Also commands that create a suitable format for the reference list.
+\renewcommand{\cite}[1]{[#1]}
+\def\beginrefs{\begin{list}%
+        {[\arabic{equation}]}{\usecounter{equation}
+         \setlength{\leftmargin}{2.0truecm}\setlength{\labelsep}{0.4truecm}%
+         \setlength{\labelwidth}{1.6truecm}}}
+\def\endrefs{\end{list}}
+\def\bibentry#1{\item[\hbox{[#1]}]}
+
+%Use this command for a figure; it puts a figure in wherever you want it.
+%usage: \fig{NUMBER}{SPACE-IN-INCHES}{CAPTION}
+\newcommand{\fig}[3]{
+    \vspace{#2}
+    \begin{center}
+        Figure \thelecnum.#1:~#3
+    \end{center}
+}
+% Use these for theorems, lemmas, proofs, etc.
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{proposition}{命题}[section]
+\newtheorem{claim}{Claim}[section]
+\newtheorem{corollary}{推论}[section]
+\newtheorem{definition}{定义}[section]
+% \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
+
+% **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
+
+\newcommand\E{\mathbb{E}}
+
+\begin{document}
+%FILL IN THE RIGHT INFO.
+%\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
+\lecture{7}{非线性方程和方程组的解法}{Zhitao Liu}{Yusu Pan}
+%\footnotetext{These notes are partially based on those of Nigel Mansell.}
+
+% **** YOUR NOTES GO HERE:
+
+% Some general latex examples and examples making use of the
+% macros follow.
+%**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
+%**** ARE NEVER READ BY ANYBODY.
+
+\section{引言}\label{sec:ying_yan_}
+一元方程的搜索法:有根区间,根的隔离区间
+% section 引言 (end)
+
+\section{误差的基本概念}\label{sec:wu_cha_de_ji_ben_gai_nian_}
+\subsection{一元方程的基本迭代法}\label{sub:yi_yuan_fang_chen_de_ji_ben_die_dai_fa_}
+一元方程的基本迭代法:映内,压缩,不动点,不动点迭代法
+% subsection 一元方程的基本概念 (end)
+
+\subsection{基本迭代法及其收敛性}
+基本迭代法及其收敛性:迭代法的基本收敛性定理,迭代终止准则
+% subsection 基本迭代法及其收敛性 (end)
+
+\subsection{局部收敛性和收敛阶}
+% subsection 局部收敛性和收敛阶 (end)
+
+\subsection{收敛性的改善}\label{sub:label_name}
+Steffensen迭代法
+% subsection 收敛性的改善 (end)
+% section 误差的基本概念 (end)
+
+\section{一元方程牛顿迭代法}
+\subsection{牛顿迭代法及其收敛性}
+牛顿迭代法
+\begin{equation*}
+  x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}
+\end{equation*}
+% subsection 牛顿迭代法及其收敛性 (end)
+
+\subsection{重根时的牛顿迭代改善}
+方法1 (构造$\mu(x)$使得$x^*$为$\mu(x)$的单根)
+\begin{equation*}
+  \begin{aligned}
+    \mu(x) &= \frac{f(x)}{f'(x)} \\
+    x_{k+1} &= x_k - \frac{\mu(x_k)}{\mu'(x_k)}
+  \end{aligned}
+\end{equation*}
+
+方法2 (需要已知根的重数$m$, 不实用)
+\begin{equation*}
+  x_{k+1} = \varphi(x_k) = x_k - m \frac{f(x_k)}{f'(x_k)}
+\end{equation*}
+% subsection 重根时的牛顿迭代改善 (end)
+
+\subsection{离散牛顿法}
+将导数换为$x_k$与$x_{k-1}$的差分公式
+\begin{equation*}
+  x_{k+1} = x_k - \frac{x_k - x_{k-1}}{f(x_k) - f(x_{k-1})} f(x_k)
+\end{equation*}
+% subsection 离散牛顿法 (end)
+% section 一元方程牛顿迭代法 (end)
+
+\section{非线性方程的解法}\label{sec:fei_xian_xin_fang_chen_de_jie_fa_}
+\subsection{不动点迭代法}
+\begin{itemize}
+  \item 映内, 压缩
+  \item 不动点存在定理, 压缩映射定理
+  \item 局部收敛
+  \item Jacobi矩阵
+\end{itemize}
+% subsection 不动点迭代法 (end)
+
+\subsection{牛顿迭代法}
+\begin{equation*}
+  x^{(k+1)} = x^{(k)} - F'(x^{(k)})^{-1} F(x^{(k)})
+\end{equation*}
+
+\begin{itemize}
+  \item 牛顿方程
+  \item 阻尼牛顿法: $F'(x^*)$奇异或病态时可用, 阻尼因子, 阻尼项
+\end{itemize}
+% subsection 牛顿迭代法 (end)
+
+\subsection{牛顿点迭代法}
+用迭代法求解非线性方程组, 特别是非线性方程组时, 初始值的选取至关重要, 初值不仅影响迭代是否收敛, 而且当方程多解时, 不同的初值可能收敛到不同的解.
+
+牛顿迭代函数
+% subsection 牛顿点迭代法 (end)
+
+\subsection{拟牛顿法}
+% subsection 拟牛顿法 (end)
+% section 非线性方程的解法 (end)
+\end{document}

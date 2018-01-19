@@ -1,0 +1,469 @@
+% !TEX program = xelatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[twoside]{article}
+\setlength{\oddsidemargin}{0.25 in}
+\setlength{\evensidemargin}{-0.25 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+
+%
+% ADD PACKAGES here:
+%
+
+\usepackage{xeCJK}
+\usepackage{amsmath,amsfonts,amsthm,graphicx}
+\usepackage{mathtools}
+\usepackage{color}   %May be necessary if you want to color links
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{mleftright}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    linkcolor=red,  %choose some color if you want links to stand out
+}
+
+%
+% The following commands set up the lecnum (lecture number)
+% counter and make various numbering schemes work relative
+% to the lecture number.
+%
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum-\arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+%
+% The following macro is used to generate the header.
+%
+\newcommand{\lecture}[4]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{lecnum}{#1}
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf 科学与工程计算方法
+        \hfill Winter 2017} }
+       \vspace{4mm}
+       \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
+       \vspace{2mm}
+       \hbox to 6.28in { \textit{Lecturer: #3 \hfill Scribes: #4} }
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{Lecture #1: #2}{Lecture #1: #2}
+}
+%
+% Convention for citations is authors' initials followed by the year.
+% For example, to cite a paper by Leighton and Maggs you would type
+% \cite{LM89}, and to cite a paper by Strassen you would type \cite{S69}.
+% (To avoid bibliography problems, for now we redefine the \cite command.)
+% Also commands that create a suitable format for the reference list.
+\renewcommand{\cite}[1]{[#1]}
+\def\beginrefs{\begin{list}%
+        {[\arabic{equation}]}{\usecounter{equation}
+         \setlength{\leftmargin}{2.0truecm}\setlength{\labelsep}{0.4truecm}%
+         \setlength{\labelwidth}{1.6truecm}}}
+\def\endrefs{\end{list}}
+\def\bibentry#1{\item[\hbox{[#1]}]}
+
+%Use this command for a figure; it puts a figure in wherever you want it.
+%usage: \fig{NUMBER}{SPACE-IN-INCHES}{CAPTION}
+\newcommand{\fig}[3]{
+    \vspace{#2}
+    \begin{center}
+        Figure \thelecnum.#1:~#3
+    \end{center}
+}
+% Use these for theorems, lemmas, proofs, etc.
+\newtheorem{theorem}{定理}[section]
+\newtheorem{algo}{算法}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{proposition}{命题}[section]
+\newtheorem{claim}{Claim}[section]
+\newtheorem{corollary}{推论}[section]
+\newtheorem{definition}{定义}[section]
+\newtheorem{eg}{例}[section]
+% \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
+
+% **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\begin{document}
+%FILL IN THE RIGHT INFO.
+%\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
+\lecture{4}{插值和拟合}{Zhitao Liu}{Yusu Pan}
+%\footnotetext{These notes are partially based on those of Nigel Mansell.}
+
+% **** YOUR NOTES GO HERE:
+
+% Some general latex examples and examples making use of the
+% macros follow.
+%**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
+%**** ARE NEVER READ BY ANYBODY.
+
+\section{引言}
+\begin{definition}
+  (插值多项式)
+  \begin{equation}
+    L_n(x_i)=y_i
+  \end{equation}
+\end{definition}
+\begin{itemize}[leftmargin=2em]
+  \item 插值区间, 插值节点, 插值点, 被插函数, 插值函数 插值条件
+\end{itemize}
+\begin{theorem}
+  (插值多项式$L_n(x)$的唯一性)
+\end{theorem}
+\begin{eg}
+  \begin{itemize}
+    \item 线性模型, 非线性模型
+    \item 最小二乘法, 均方误差
+    \item 离散数据拟合问题
+  \end{itemize}
+\end{eg}
+% section 引言 (end)
+
+\section{插值}
+\subsection{拉格朗日插值法}
+\begin{itemize}
+  \item \textit{拉格朗日插值基函数}
+    \begin{equation}
+      l_k^{(n)} (x) = \frac{(x-x_0)\cdots(x-x_{k-1})(x-x_{k+1})\cdots(x-x_n)}{(x_k-x_0)\cdots(x_k-x_{k-1})(x_k-x_{k+1})\cdots(x_k-x_n)}
+    \end{equation}
+  \item 拉格朗日插值基函数的两个性质
+  \item \textit{拉格朗日插值公式}
+    \begin{equation}
+      L_n(x)=\sum^n_{k=0} y_k l^{(n)}_k (x)
+    \end{equation}
+\end{itemize}
+\begin{eg}
+  (求拉格朗日基函数与插值多项式)
+\end{eg}
+% subsection 拉格朗日插值法 (end)
+\subsection{插值的余项}
+\begin{theorem}
+  (插值多项式的余项/插值的截断误差或方法误差)
+  \begin{equation}
+    R_n(x)=f(x)-L_n(x) = \frac{f^{(n+1)}(\xi_x)}{(n+1)!} \omega_{n+1}(x)
+  \end{equation}
+\end{theorem}
+\begin{corollary}
+  (线性插值余项的上界)
+  \begin{equation}
+    \begin{aligned}
+      |R_1(x)| &\le \frac{M_2}{8} {(b-a)}^2
+      M_2 = \max_{a\le x\le b}{|f''(x)|}
+    \end{aligned}
+  \end{equation}
+\end{corollary}
+\begin{eg}
+  (线性插值求近似, 证明有效数字)
+\end{eg}
+% paragraph 插值多项式的余项(插值的截断误差或方法误差) (end)
+% subsection 插值的余项 (end)
+\subsection{均差和牛顿插值法}
+\begin{itemize}
+  \item \textit{$n$阶均差 (或差商)}
+    \begin{equation}
+      f[x_0, x_1, \ldots, x_n] \equiv \frac{f[x_0, x_1, \ldots, x_{n-1}] - f[x_1, x_2, \ldots, x_{n}]}{x_0-x_n}
+    \end{equation}
+  \item \textit{牛顿插值公式}
+    \begin{equation}
+      N_n(x) = f(x_0) + f[x_0, x_1](x-x_0) + f[x_0, x_1, x_2](x-x_0)(x-x_1) + \cdots + f[x_0, x_1, lcdots, x_n](x-x_0)(x-x_1)\ldots(x-x_{n-1})
+    \end{equation}
+\end{itemize}
+\begin{eg}
+  (用牛顿插值公式求2次插值多项式)
+\end{eg}
+% subsection 均差和牛顿插值法 (end)
+% section 插值 (end)
+
+\section{分段低次插值}
+\subsection{龙格现象和分段线性插值}
+\begin{eg}
+  龙格现象: $L(x)$的截断误差在区间两端非常大
+\end{eg}
+\begin{definition}
+  (分段线性插值多项式)
+  \begin{equation}
+    I_h(x)=\sum^n_{i=0} f(x_i) l_i(x)
+  \end{equation}
+  \begin{equation}
+    I_h (x) = f(x_i) \frac{x-x_{i+1}}{x_i-x_{i+1}} + f(x_{i+1})\frac{x-x_i}{x_{i+1}-x_i}, x\in[x_i, x_{i+1}]
+  \end{equation}
+\end{definition}
+\begin{itemize}
+  \item 划分, 边界点, 内节点
+\end{itemize}
+\begin{theorem}
+  (分段线性插值的一致收敛性)
+\end{theorem}
+% subsection 龙格现象和分段线性插值 (end)
+\subsection{分段埃尔米特三次插值}
+\begin{theorem}
+  (Hermite三次插值)
+  \begin{equation}
+    H(x) = y_0 \alpha_0(x) + y_1 \alpha_1(x) + m_0 \beta_0(x) + m_1\beta_1(x)
+  \end{equation}
+\end{theorem}
+\begin{definition}
+  (分段Hermite三次插值多项式)
+  \begin{equation}
+    H_h(x) = y_i \alpha_i(x) + y_{i+1} \alpha_{i+1}(x) + m_i \beta_i(x) + m_{i+1}\beta_{i+1}(x), x\in[x_i, x_{i+1}]
+  \end{equation}
+\end{definition}
+\begin{itemize}
+  \item 满足边界条件以及内节点处的衔接条件
+  \item $H_h(x)$一致收敛于$f(x)$, $H_h'(x)$一致收敛于$f'(x)$.
+\end{itemize}
+% subsection 分段埃尔米特三次插值 (end)
+% section 分段低次插值 (end)
+
+\section{三次样条插值}
+\subsection{样条插值的背景和定义}
+\begin{definition}
+  (m次样条插值与m次样条插值多项式)
+\end{definition}
+% subsection 样条插值的背景和定义 (end)
+\subsection{三次样条插值的定解条件}
+\begin{equation}
+  s(x)=a_i x^3+b_i x^2+c_i x+d_i, x\in[x_i, x_{i+1}]
+\end{equation}
+应满足
+\begin{itemize}
+  \item 插值和函数连续条件$2n$个
+  \item $n-1$个内节点处的一阶导数连续条件
+    \begin{equation}
+      s'(x_i-0)=s'(x_i+0)
+    \end{equation}
+  \item $n-1$个内节点处的二阶导数连续条件
+    \begin{equation}
+      s''(x_i-0)=s''(x_i+0)
+    \end{equation}
+\end{itemize}
+为了定解, 通常需附加以下三种边界条件
+\begin{itemize}
+  \item \textit{固支条件}: 已知两端点的一阶导数值
+    \begin{equation}
+      s'(x_0)=f'(x_0), s'(x_n)=f'(x_n)
+    \end{equation}
+  \item \textit{自然边界条件}: 已知两端点的二阶导数值
+    \begin{equation}
+      s''(x_0)=f''(x_0), s''(x_n)=f''(x_n)
+    \end{equation}
+  \item \textit{周期条件}
+    \begin{equation}
+      s'(x_0+0)=s'(x_n-0), s''(x_0+0)=s''(x_n-0)
+    \end{equation}
+\end{itemize}
+\begin{eg}
+  (待定系数法求解自然边界条件下的三次样条多项式)
+\end{eg}
+% subsection 三次样条插值的定解条件 (end)
+\subsection{三弯矩算法}
+\paragraph{三弯矩方程}
+\begin{equation}
+  \begin{aligned}
+    &\mu_i M_{i-1} + 2M_i + \lambda_i M_{i+1} = d_i, i=1,2,\ldots,n-1 \\
+    &h_i = x_{i+1}-x_i \\
+    &M(x)=s''(x)
+    &
+    \begin{cases}{}
+      \mu_i = \frac{h_{i-1}}{h_{i-1}+h_{i}}, \lambda_i=1-\mu \\
+      d_i = 6f[x_{i-1}, x_i, x_{i+1}]
+    \end{cases}
+  \end{aligned}
+\end{equation}
+\begin{equation}
+\end{equation}
+% paragraph 三弯矩方程 (end)
+\begin{algo}
+  \begin{itemize}
+    \item 计算参数
+      \begin{equation}
+        \begin{aligned}
+          &h_i = x_{i+1}-x_i \\
+          &f[x_i, x_{i+1}] = \frac{y_{i+1}-y_i}{h_i} \\
+          &
+          \begin{cases}{}
+            \mu_i = \frac{h_{i-1}}{h_{i-1}+h_{i}}, \lambda_i=1-\mu \\
+            f[x_{i-1}, x_i, x_{i+1}] = \frac{f[x_{i-1}, x_i] - f[x_i, x_{i+1}]}{x_{i-1} - x_{x+1}} \\
+            d_i = 6f[x_{i-1}, x_i, x_{i+1}]
+          \end{cases}
+        \end{aligned}
+      \end{equation}
+    \item 设置与边界条件有关的参数
+      \begin{itemize}
+        \item $d_0=\frac{6}{h_0} (f[x_0, x_1]-f'(x_0)), d_n=\frac{6}{h_{n-1}} (f'(x_n)-f[x_{n-1}, x_n])$
+        \item $M_0=f''(x_0), M_n=f''(x_n)$
+        \item $\mu_n=\frac{h_{n-1}}{h_0+h_{n-1}}, \lambda_n=1-\mu_n, \tilde{d_n}=\frac{6}{h_0+h_{n-1}}(f[x_0,x_1]-f[x_{n-1},x_n])$
+      \end{itemize}
+    \item 求解与边界条件对应的三弯矩方程, 得到弯矩值${ \{M_i\} }^n_{i=0}$
+    \item 把${ \{M_i\} }^n_{i=0}$代入, 得到三次样条插值多项式.
+  \end{itemize}
+\end{algo}
+\subsection{例题和一致收敛性}
+\begin{eg}
+  (用三弯矩算法求三次样条多项式)
+\end{eg}
+\begin{theorem}
+  (第一, 二种条件下的三次样条插值的误差估计式)
+  \end{theorem}
+\begin{itemize}
+  \item $s(x)$一致收敛于$f(x)$, $s'(x)$一致收敛于$f'(x)$, $s''(x)$一致收敛于$f''(x)$.
+  \item $s(x)$收敛最快, $s'(x)$次之, $s''(x)$最慢.
+\end{itemize}
+% subsection 例题和一致收敛性 (end)
+% subsection 三弯矩算法 (end)
+% section 三次样条插值 (end)
+
+\section{正交多项式}
+\subsection{连续函数空间}
+\begin{definition}
+  (线性相关与线性无关)
+\end{definition}
+\begin{definition}
+  (张成的子空间)
+  \begin{equation}
+    S_n = span\{f_1, \ldots, f_n\}
+  \end{equation}
+\end{definition}
+\begin{itemize}
+  \item \textit{多项式空间}:由不超过$n$次多项式的全体构成的$n+1$维线性空间
+    \begin{equation}
+      P_n = span\{1,x,x^2,\ldots, x^n\}
+    \end{equation}
+  \item \textit{函数值向量的内积}
+    \begin{equation}
+      (f,g) = \sum^m_{i=0} \omega_i f(x_i) g(x_i), f,g\in C[a,b]
+    \end{equation}
+  \item \textit{正交函数序列}
+\end{itemize}
+% subsection 连续函数空间 (end)
+\subsection{离散点列上的正交多项式}
+\begin{definition}
+  (在离散点列${ \{x_i\} }^m_{i=0}$上的带权${ \{\omega_i\} }^m_{i=0}$的正交多项式序列${ \{\varphi_k(x)\} }^n_{k=0}$)
+\end{definition}
+\begin{lemma}
+  (${ \{\varphi_k(x)\} }^n_{k=0}$线性无关的条件)
+  $n<m$并且${ \{x_i\} }^m_{i=0}$中至少有$n-1$个点互异
+\end{lemma}
+\begin{theorem}
+  (正交多项式序列)
+\end{theorem}
+\begin{theorem}
+  (正交多项式序列的性质)
+\end{theorem}
+\begin{lemma}
+  (三项递推公式)
+  \begin{equation}
+    \begin{cases}{}
+      \varphi_0(x)=1, \varphi_1(x)=x-a_0 \\
+      \varphi_{k+1}(x)=(x-a_k)\varphi_k(x)-b_k\varphi_{k-1}(x)
+    \end{cases}
+    ,k=1,2,\ldots, n-1
+  \end{equation}
+  \begin{equation}
+    \begin{cases}{}
+      a_k = \frac{(x\varphi_k, \varphi_k)}{(\varphi_k, \varphi_k)}, & k=1,2,\ldots, n-1\\
+      b_k = \frac{(\varphi_k, \varphi_k)}{(\varphi_{k-1}, \varphi_{k-1})}, & k=1,2,\ldots, n-1\\
+      (x\varphi_k, \varphi_k) = \sum^m_{i=0} \omega_i x_i { [\varphi_k(x_i)] }^2
+    \end{cases}
+  \end{equation}
+\end{lemma}
+\begin{eg}
+  (利用三项递推公式求正交多项式)
+\end{eg}
+% subsection 离散点列上的正交多项式 (end)
+\subsection{连续区间上的正交多项式}
+\begin{definition}
+  (在区间$[a,]$上的带权$\rho(x)$的正交多项式序列${ \{\varphi_k(x)\} }^n_{k=0}$)
+\end{definition}
+\begin{theorem}
+\end{theorem}
+% subsection 连续区间上的正交多项式 (end)
+% section 正交多项式 (end)
+
+\section{离散数据的曲线拟合}
+\subsection{线性模型和最小二乘拟合}
+\begin{definition}
+  (最小二乘拟合与最小二乘问题)
+\end{definition}
+% subsection 线性模型和最小儿乘拟合 (end)
+\subsection{正规方程和解的存在唯一性}
+\paragraph{正规方程}
+\begin{equation}
+  \begin{bmatrix}
+    (\varphi_0, \varphi_0) & (\varphi_1, \varphi_0) & \cdots & (\varphi_3, \varphi_0) \\
+    (\varphi_0, \varphi_1) & (\varphi_1, \varphi_1) & \cdots & (\varphi_3, \varphi_1) \\
+    \vdots                 & \vdots                 & \ddots & \vdots \\
+    (\varphi_0, \varphi_n) & (\varphi_1, \varphi_n) & \cdots & (\varphi_n, \varphi_n) \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    \alpha_0 \\
+    \alpha_1 \\
+    \vdots \\
+    \alpha_n \\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    (y, \varphi_0) \\
+    (y, \varphi_1) \\
+    \vdots \\
+    (y, \varphi_n)
+  \end{bmatrix}
+\end{equation}
+最小二乘问题存在唯一解的必要条件是正规方程的系数矩阵 (Gram矩阵) 非奇异.
+% paragraph 正规方程 (end)
+\begin{theorem}
+  Gram矩阵$G$非奇异的充要条件是向量组线性无关${ \{x_i\} }^m_{i=0}$
+\end{theorem}
+\begin{theorem}
+  (正规方程解的性质)
+\end{theorem}
+\begin{theorem}
+  (正规方程的解的平方误差)
+  \begin{equation}
+    \delta^2 &= \norm{y-\varphi^*}^2_2= \norm{y}^2_2 - (y, \varphi^*)= \norm{y}^2_2 - \sum^n_{k=0} \alpha^*_k (y, \varphi_k)
+  \end{equation}
+\end{theorem}
+% subsection 正规方程和解的存在唯一性 (end)
+\subsection{多项式拟合和例题}
+\paragraph{多项式拟合}
+\begin{equation}
+  \begin{cases}{}
+    (\varphi_k, \varphi_l) = \sum^m_{i=0} \omega_i x_i^{k+l}, & k,l=1,2,\ldots, n-1\\
+    (y, \varphi_l) = \sum^m_{i=0} \omega_i y_i x_i^{l}, & l=0,1,2,\ldots, n\\
+  \end{cases}
+\end{equation}
+% paragraph 多项式拟合 (end)
+\begin{eg}
+  (用多项式拟合离散数据)
+\end{eg}
+% subsection 多项式拟合和例题 (end)
+\subsection{正规方程的病态和正交多项式拟合}
+\paragraph{正交多项式拟合}
+\begin{itemize}
+  \item 求正交多项式序列${ \{\varphi_k(x)\} }^n_{k=0}$
+  \item 求$(\varphi_k, \varphi_l)$与$(y, \varphi_l)$, 解正规方程$G\alpha=d$
+  \item 由$\alpha^*$求拟合函数
+\end{itemize}
+% paragraph 正交多项式拟合 (end)
+\begin{eg}
+  (用正规化方法离散数据的二次多项式拟合)
+\end{eg}
+% subsection 正规方程的病态和正交多项式拟合 (end)
+% section 离散数据的曲线拟合 (end)
+\end{document}

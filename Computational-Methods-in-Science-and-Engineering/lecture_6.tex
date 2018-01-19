@@ -1,0 +1,447 @@
+% !TEX program = xelatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[twoside]{article}
+\setlength{\oddsidemargin}{0.25 in}
+\setlength{\evensidemargin}{-0.25 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+
+%
+% ADD PACKAGES here:
+%
+
+\usepackage{xeCJK}
+\usepackage{amsmath,amsfonts,amsthm,graphicx}
+\usepackage{mathtools}
+\usepackage{color}   %May be necessary if you want to color links
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{mleftright}
+\hypersetup{
+    colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    linkcolor=red,  %choose some color if you want links to stand out
+}
+
+%
+% The following commands set up the lecnum (lecture number)
+% counter and make various numbering schemes work relative
+% to the lecture number.
+%
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum-\arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+%
+% The following macro is used to generate the header.
+%
+\newcommand{\lecture}[4]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{lecnum}{#1}
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf 科学与工程计算方法
+        \hfill Winter 2017} }
+       \vspace{4mm}
+       \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
+       \vspace{2mm}
+       \hbox to 6.28in { \textit{Lecturer: #3 \hfill Scribes: #4} }
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{Lecture #1: #2}{Lecture #1: #2}
+}
+%
+% Convention for citations is authors' initials followed by the year.
+% For example, to cite a paper by Leighton and Maggs you would type
+% \cite{LM89}, and to cite a paper by Strassen you would type \cite{S69}.
+% (To avoid bibliography problems, for now we redefine the \cite command.)
+% Also commands that create a suitable format for the reference list.
+\renewcommand{\cite}[1]{[#1]}
+\def\beginrefs{\begin{list}%
+        {[\arabic{equation}]}{\usecounter{equation}
+         \setlength{\leftmargin}{2.0truecm}\setlength{\labelsep}{0.4truecm}%
+         \setlength{\labelwidth}{1.6truecm}}}
+\def\endrefs{\end{list}}
+\def\bibentry#1{\item[\hbox{[#1]}]}
+
+%Use this command for a figure; it puts a figure in wherever you want it.
+%usage: \fig{NUMBER}{SPACE-IN-INCHES}{CAPTION}
+\newcommand{\fig}[3]{
+                        \vspace{#2}
+                        \begin{center}
+                        Figure \thelecnum.#1:~#3
+                        \end{center}
+        }
+% Use these for theorems, lemmas, proofs, etc.
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{proposition}{命题}[section]
+\newtheorem{claim}{Claim}[section]
+\newtheorem{corollary}{推论}[section]
+\newtheorem{definition}{定义}[section]
+\newtheorem{eg}{例}[section]
+% \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
+
+% **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
+
+\begin{document}
+%FILL IN THE RIGHT INFO.
+%\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
+\lecture{6}{常微分方程的数值解法}{Zhitao Liu}{Yusu Pan}
+%\footnotetext{These notes are partially based on those of Nigel Mansell.}
+
+% **** YOUR NOTES GO HERE:
+
+% Some general latex examples and examples making use of the
+% macros follow.
+%**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
+%**** ARE NEVER READ BY ANYBODY.
+
+\section{引言}
+\begin{itemize}
+  \item 常微分方程初值问题的一般形式
+    \begin{equation}
+        \frac{dy}{dx}=f(x,y)
+    \end{equation}
+    \begin{equation}
+          y(x_0)=y_0
+    \end{equation}
+  \item 两点边值问题 (第一类边界条件)的一般形式
+    \begin{equation}
+      y''=f(x,y,y')
+    \end{equation}
+    \begin{equation}
+      y(a)=\alpha, y(b)=\beta
+    \end{equation}
+\end{itemize}
+
+\section{初值问题的数值解法}
+\subsection{Euler方法及其截断误差}
+\subsubsection{Euler公式}
+\begin{itemize}
+  \item 显式Euler公式
+    \begin{equation}
+        y_{n+1}=y_n + hf(x_n, y_n)
+    \end{equation}
+  \item 隐式Euler公式/后退Euler公式
+    \begin{equation}
+      y_{n+1}=y_n + hf(x_{n+1},y_{n+1})
+    \end{equation}
+  \item 梯形公式
+    \begin{equation}
+      y_{n+1} = y_n + \frac{h}{2} [f(x_n,y_n), f(x_{n+1},y_{n+1})]
+    \end{equation}
+  \item 差分公式: 统称Euler公式与梯形公式
+  \item 单步法: 由$y_n$去计算$y_{n+1}$
+\end{itemize}
+% subsubsection Euler公式 (end)
+\subsubsection{隐式公式的计算}
+\begin{itemize}
+  \item 如果$f(x,y)$是$y$的线性函数, 则隐式公式可以显式计算
+  \item 如果$f(x,y)$是$y$的非线性函数, 则可以用迭代法求解
+  \item 简单迭代公式
+    \begin{equation}
+      \begin{cases}{}
+        y^{(0)}_{n+1} = y_n + hf(x_n,y_n)\\
+        y^{(k+1)}_{n+1} = y_n + \frac{h}{2} [f(x_n, y_n)+f(x_{n+1},y^{(k)}_{n+1})], &k=0,1,2,\ldots
+      \end{cases}
+    \end{equation}
+  \item 预测-校正技术: 先用显式方法计算, 预测一个值$y^p_{n+1}$, 为隐式公式提供一个好的迭代初值, 然后隐式公式迭代一次, 得到$y_{n+1}$
+    \begin{equation}
+      \begin{cases}{}
+        y^{(0)}_{n+1} = y_n + hf(x_n,y_n)\\
+        y^{(k+1)}_{n+1} = y_n + \frac{h}{2} [f(x_n, y_n)+f(x_{n+1},y^p_{n+1})]
+      \end{cases}
+    \end{equation}
+  \item 改进Euler公式 (与预测-校正技术等价的显式公式)
+    \begin{equation}
+      y_{n+1}=y_n + \frac{h}{2} [f(x_n,y_n) + f(x_{n+1}, y_n + h f(x_n, y_n))]
+    \end{equation}
+\end{itemize}
+\begin{eg}
+  (用显式Euler法, 隐式Euler法和梯形公式求解微分初值问题)
+\end{eg}
+% subsubsection 隐式公式的计算 (end)
+\subsubsection{局部截断误差和方法的阶}
+\paragraph{整体截断误差}
+从$x_0$开始计算，如果考虑每一步产生的误差，直到$x_n$，则有误差$e(n)=y(x_{n+1})-y_n$。
+% paragraph 整体截断误差 (end)
+\begin{definition}
+  单步法的局部截断误差
+  \begin{equation}
+    T_{n+1}=y(x_{n+1})-y(x_n)-\phi(x_n, x_{n+1}, y(x_n),y(x_{n+1}),h)
+  \end{equation}
+\end{definition}
+\begin{definition}
+  如果给定方法的局部截断误差是
+  \begin{equation}
+    T_{n+1}=O(h^{p+1})
+  \end{equation}
+  其中$p\ge 1$为整数，则称是$p$阶的，或具有$p$阶精度。
+\end{definition}
+\begin{definition}
+  局部截断误差主项$g(x_n, y(x_n)) h^{p+1}$
+  \begin{equation}
+      T_{n+1}=g(x_n, y(x_n)) h^{p+1} + O(h^{p+2})
+  \end{equation}
+\end{definition}
+
+显式与隐式Euler公式均为一阶方法。梯形公式是两者的算术平均，其局部截断误差也是两者的算术平均，为二阶精度。
+% subsubsection 局部截断误差和方法的阶 (end)
+% subsection Euler方法及其截断误差 (end)
+\subsection{Runge-Kutta法}
+        方法的阶越高，方法就越精确，这启发人们用区间上若干个点的导数$f$，将其线性组合得到平均斜率，以提高方法的阶，这就是Runge-Kutta方法的基本思想。
+
+\begin{equation}
+    \begin{aligned}
+        y_{n+1} &= y_n + h \sum_{i=1}^{L} \lambda_i k_i \\
+        k_i &= f(x_n + c_i h, y_n + c_i h \sum_{j=1}{i-1} a_{ij} k_j), i=2,3\dots L \\
+    \end{aligned}
+\end{equation}
+
+\begin{itemize}
+  \item $L$级$p$阶Runge-Kutta方法
+  \item 经典R-K方法（4级4阶）
+    \begin{equation}
+      \begin{aligned}
+        y_{n+1} &= y_n + \frac{h}{6} (k_1 + 2k_2 + 2k_3 + k_4) \\
+        k1 &=f(x_n, y_n) \\
+        k2 &=f(x_n + \frac{h}{2}, y_n + \frac{h}{2} k_1) \\
+        k3 &=f(x_n + \frac{h}{2}, y_n + \frac{h}{2} k_2) \\
+        k4 &=f(x_n + h, y_n + h k_3) \\
+      \end{aligned}
+    \end{equation}
+  \item R-K-Fehlberg方法（由一个5级4阶R-K公式和一个6级5阶R-K公式组成）
+  \item 隐式R-K法:
+    \begin{itemize}
+      \item 1级2阶中心公式
+      \item 2级2阶梯形公式
+      \item 2级4阶R-K公式
+    \end{itemize}
+\end{itemize}
+\begin{eg}
+  (用一阶显式Euler公式, 改进Euler公式和经典R-K公式计算微分方程初值问题)
+\end{eg}
+% subsection Runge-Kutta法 (end)
+\subsection{单步法的稳定性}
+
+
+\begin{itemize}
+  \item 单步法的统一形式, 增量函数$\psi (x_n,y_n,h)$
+    \begin{equation}
+      y_{n+1} = y(n) + h \psi (x_n,y_n,h)
+    \end{equation}
+  \item 条件稳定, 无条件稳定 (如梯形公式)
+\end{itemize}
+\begin{definition}
+  (方法收敛的定义)
+\end{definition}
+\begin{theorem}
+  (Lipschitz条件的定义)
+\end{theorem}
+\begin{lemma}
+  满足Lipschitz条件, 初值精确, 则显式Euler法, 改进Euler法和R-K方法是收敛的.
+\end{lemma}
+\begin{lemma}
+  一个方法的整体截断误差比局部截断误差低一阶, 所以常常通过求出局部截断误差w
+\end{lemma}
+\begin{definition}
+  (绝对稳定, 绝对稳定区域, 绝对稳定区间)
+  \begin{equation}
+    y_{n+1} = E (\lambda h) y_n
+  \end{equation}
+\end{definition}
+\begin{eg}
+  (经典R-K法绝对稳定区间$-2.785\le \lambda h \le 0$求步长$h$)
+\end{eg}
+% subsection 单步法的稳定性 (end)
+\subsection{线性多步法}
+\paragraph{线性多步法}
+利用前面已经算出的$r+1$个值, 计算$y_{n+1}$. 构造如下的线性多项式,使其具有$p$阶精度
+\begin{equation}
+    \begin{aligned}
+        y_{n+1} &=\alpha_0 y_n + \alpha_1 y_{n-1} + \cdots \alpha_r y_{n-r} + h(\beta_{-1}f_{n+1} + \beta_0 f_n + \cdots + \beta_r f_{n-r}) \\
+        &= \sum^r_{k=0} \alpha_k y_{n-k} + h \sum^r_{k=-1} \beta_k f_{n-k}
+    \end{aligned}
+\end{equation}
+
+记住推导方法,得到以下公式
+
+\begin{equation}
+  \begin{cases}
+        \sum^r_{k=0} \alpha_k = 1 \\
+        \sum^r_{k=1} {(-k)}^j \alpha_k + j \sum^r_{k=-1} { (-k) }^(j-1) \beta_k = 1,& j=1,2,\ldots,p
+  \end{cases}
+\end{equation}
+
+通过同阶的单步法从$y_0$迭代计算,为线性多步法提供所需的一系列初值$y_1, y_2, \dots, y_r$.
+% paragraph 线性多步法 (end)
+\begin{itemize}
+  \item Adams 4步4阶显式公式 $\star$
+  \item Milne 4步4阶显式公式 $\star$
+  \item 3步4阶隐式Adams公式
+  \item 3步4阶隐式Hamming公式 $\star$
+  \item Simpson隐式公式
+\end{itemize}
+\begin{eg}
+  (4步4阶显式Milne公式, 3步4阶隐式Hamming公式计算)
+\end{eg}
+% subsection 线性多步法 (end)
+\subsection{预测-校正技术和外推技巧}
+\subsubsection{修正Hamming公式}
+    \begin{enumerate}
+        \item \textbf{预测}:
+        \item \textbf{修正}:
+        \item \textbf{校正}:
+        \item \textbf{修正}:
+    \end{enumerate}
+
+% subsubsection 修正Hamming公式 (end)
+\subsubsection{Adams预测-校正公式}
+    \begin{enumerate}
+        \item \textbf{预测}:
+        \item \textbf{修正}:
+        \item \textbf{校正}:
+        \item \textbf{修正}:
+    \end{enumerate}
+% subsubsection Adams预测-校正公式 (end)
+\begin{eg}
+  (Milne-Hamming预测-校正公式和修正Hamming法计算)
+\end{eg}
+% subsection 预测-校正技术和外推技巧 (end)
+
+\section{一阶常微分方程的数值解法}
+\subsection{一阶方程组和高阶方程}
+\begin{itemize}
+  \item 一阶方程组可化为向量形式
+  \item 高阶方程可降为一阶方程组
+\end{itemize}
+% subsection 一阶方程组和高阶方程 (end)
+\subsection{刚性方程 (组)}
+考虑线性常系数常微分方程组
+
+\begin{equation}
+  \frac{dy}{dx} = \mathbf{Ay} + \mathbf{b}, x\in[a,b]
+\end{equation}
+
+通解为
+\begin{equation}
+  \mathbf{y}(x) = \sum_{k=1}^m c_k e^{\lambda_k x} \varphi _k + \psi(x)
+\end{equation}
+\begin{itemize}
+  \item 瞬态解$\sum_{k=1}^m c_k e^{\lambda_k x} \varphi _k$、稳态解$\psi(x)$、快瞬态解 ($|Re(\lambda_k|$较大的项)、慢瞬态解
+  \item 刚性现象: 若一个解中既含快瞬态解又含慢瞬态解, 且解分量之间的数量级相差很大, 则快瞬态解严重影响数值解的稳定性和精度.整个区间上计算均受快瞬态解的制约, 在很长的区间内必须保持小步长
+  \item 刚性方程、刚性方程组、刚性比
+    \begin{equation}
+      s = \frac{\max_{1\le k\le m}{|Re(\lambda_k)|}}{\min_{1\le k\le m}{|Re(\lambda_k)|}} \gg 1
+    \end{equation}
+\end{itemize}
+\begin{eg}
+  (用隐式Euler法, 梯形公式, 2级4阶隐式R-K法和4阶经典R-K法求解)
+  \begin{itemize}
+    \item 在非刚性阶段宁愿用小步长显式方法, 因为当问题是非线性时, 显式方法比隐式方法简单
+    \item 在刚性阶段, 宜用高稳定的隐式方法, 因为它可以放大步长, 特别是A稳定的方法
+  \end{itemize}
+\end{eg}
+% subsection 刚性方程 (组) (end)
+\subsection{刚性方程 (组)的数值方法}
+\begin{definition}
+  (A稳定)
+\end{definition}
+\begin{itemize}
+    \item 隐式Euler法, 梯形公式, 2级4阶隐式R-K法均为A稳定
+    \item 任何显式多步法和显式R-K法都不可能是A稳定的
+    \item A稳定的隐式线性多步法的阶不能超过2, 其中具有最小误差常数的公式是梯形公式
+\end{itemize}
+% subsection 刚性方程 (组)的数值方法 (end)
+% section 一阶常微分方程的数值解法 (end)
+
+\section{边值问题的打靶法和差分法}\label{sec:bian_zhi_wen_ti_de_da_ba_fa_he_chai_fen_fa_}
+\paragraph{线性两点边值问题}
+\begin{equation}
+  \left\{
+    \begin{aligned}
+        & y'' + p(x)y' + q(x)y = f(x) \\
+        & y(a) = \alpha \\
+        & y(b)= \beta
+    \end{aligned}
+  \right.
+\end{equation}
+% paragraph 线性两点边值问题 (end)
+\subsection{打靶法}\label{sub:da_ba_fa_}
+\subsubsection{线性打靶法}\label{ssub:xian_xing_da_ba_fa_}
+  用解析的思想,将线性边值问题转化为两个初值问题,求得两个初值问题的解,即可得到边值问题的解的表达式.
+  \begin{equation}
+    \begin{cases}{}
+      Ly_1=y_1'' + p(x)y_1' + q(x)y_1=f(x),&y_1(a)=a, y_1'(a)=0 \\
+      Ly_2=y_2'' + p(x)y_2' + q(x)y_2=0,&y_2(a)=0, y_2'(a)=1 \\
+      y(x) = y_1(x) + \frac{\beta - y_1(b)}{y_2(b)} y_2(x)
+    \end{cases}
+  \end{equation}
+% subsubsection 线性打靶法 (end)
+\subsubsection{非线性打靶法}\label{ssub:fei_xian_xing_da_ba_fa_}
+对于如下的非线性边值问题
+\begin{equation}
+  \left\{
+    \begin{aligned}
+      & y''=f(x,y,y') \\
+      & y(a)=\alpha, y'(a)=s_k
+    \end{aligned}
+  \right.
+\end{equation}
+
+令$z=y'$,将上述的二阶方程化为一阶方程组
+
+\begin{equation}
+  \left\{
+    \begin{aligned}
+      & y'=z, y(a)=\alpha\\
+      & z' = f(x,y,z), z(a)=s_k
+    \end{aligned}
+  \right.
+\end{equation}
+
+主要是斜率$s_k$的选取,可以使用第七章的迭代法 (如割线法)求得.
+% subsubsection 非线性打靶法 (end)
+% subsection 打靶法 (end)
+
+\subsection{差分法}\label{sub:chai_fen_fa_}
+\paragraph{线性两点边值问题差分法}
+\begin{equation}
+  \begin{cases}{}
+    (2h^2q_1-4)y_1 + (2+hp_1)y_2 = 2h^2f_1 - (2-hp_1)\alpha \\
+    (2-hp_k)y_{k-1} + (2h^2q_k-4)y_k + (2+hp_k) y_{k+1} = 2h^2f_k, &k=2,3,\ldots,n-2 \\
+    (2-hp_{n-1})y_{n-2} + (2h^2q_{n-1} -4)y_{n-1} = 2h^2f_{n-1} - (2+hp_{n-1})\beta
+  \end{cases}
+\end{equation}
+% paragraph 线性两点边值问题差分法 (end)
+\begin{eg}
+  (用差分法求解线性两点边值问题)
+\end{eg}
+\paragraph{非线性两点边值问题的差分法}
+% paragraph 非线性两点边值问题的差分法 (end)
+% subsection 差分法 (end)
+% section 边值问题的打靶法和差分法 (end)
+
+\section{小结}\label{sec:xiao_jie_}
+  \begin{itemize}
+    \item 对于一个常微分方程 (组), 首先判别其性态是刚性还是非刚性的. 对于非刚性问题, 用显式方法计算简单.
+    \item 对于刚性问题, 在非刚性阶段, 宜选用小步长经典R-K法; 在刚性阶段, 选用梯形公式等隐式R-K法. 其中特别对非线性刚性问题, 常用的是A稳定的隐式方法.
+    \item 在假定边值问题解存在唯一的前提下, 可以采用打靶法和差分法.
+  \end{itemize}
+% section 小结 (end)
+\end{document}
