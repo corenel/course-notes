@@ -63,28 +63,6 @@
    \end{center}
    \markboth{Lecture #1: #2}{Lecture #1: #2}
 }
-%
-% Convention for citations is authors' initials followed by the year.
-% For example, to cite a paper by Leighton and Maggs you would type
-% \cite{LM89}, and to cite a paper by Strassen you would type \cite{S69}.
-% (To avoid bibliography problems, for now we redefine the \cite command.)
-% Also commands that create a suitable format for the reference list.
-\renewcommand{\cite}[1]{[#1]}
-\def\beginrefs{\begin{list}%
-        {[\arabic{equation}]}{\usecounter{equation}
-         \setlength{\leftmargin}{2.0truecm}\setlength{\labelsep}{0.4truecm}%
-         \setlength{\labelwidth}{1.6truecm}}}
-\def\endrefs{\end{list}}
-\def\bibentry#1{\item[\hbox{[#1]}]}
-
-%Use this command for a figure; it puts a figure in wherever you want it.
-%usage: \fig{NUMBER}{SPACE-IN-INCHES}{CAPTION}
-\newcommand{\fig}[3]{
-    \vspace{#2}
-    \begin{center}
-        Figure \thelecnum.#1:~#3
-    \end{center}
-}
 % Use these for theorems, lemmas, proofs, etc.
 \newtheorem{theorem}{定理}[section]
 \newtheorem{lemma}{引理}[section]
@@ -92,12 +70,11 @@
 \newtheorem{claim}{Claim}[section]
 \newtheorem{corollary}{推论}[section]
 \newtheorem{definition}{定义}[section]
+\newtheorem{eg}{例}[section]
 % \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
-
+%
 % **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
-
-\newcommand\E{\mathbb{E}}
-
+%
 \begin{document}
 %FILL IN THE RIGHT INFO.
 %\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
@@ -112,54 +89,170 @@
 %**** ARE NEVER READ BY ANYBODY.
 
 \section{引言}\label{sec:ying_yan_}
-一元方程的搜索法:有根区间,根的隔离区间
+\subsection{问题的背景和内容摘要}
+\begin{itemize}
+  \item 一元非线性方程$f(x)=0$
+  \item 多元非线性方程组$f_i(x_1,x_2,\ldots,x_n)=0, i=1,2,\ldots,n$
+\end{itemize}
+% subsection 问题的背景和内容摘要 (end)
+\subsection{一元方程的搜索法}
+\begin{itemize}
+  \item 有根区间, 根的隔离区间
+  \item 搜索法
+  \item $m$重根, $m$为奇数时, $f(x)$在点$x^*$处变号; $m$为偶数时不变号
+\end{itemize}
+\begin{eg}
+  (使用搜索法寻找长度为0.2的根的隔离区间)
+\end{eg}
+% subsection 一元方程的搜索法 (end)
 % section 引言 (end)
 
 \section{误差的基本概念}\label{sec:wu_cha_de_ji_ben_gai_nian_}
-\subsection{一元方程的基本迭代法}\label{sub:yi_yuan_fang_chen_de_ji_ben_die_dai_fa_}
-一元方程的基本迭代法:映内,压缩,不动点,不动点迭代法
-% subsection 一元方程的基本概念 (end)
-
 \subsection{基本迭代法及其收敛性}
-基本迭代法及其收敛性:迭代法的基本收敛性定理,迭代终止准则
+\paragraph{一元方程的基本迭代法}
+\begin{itemize}
+  \item 基本迭代法/不动点迭代法, 单步法的一种
+    \begin{equation}
+      f(x)=0 \to x=\varphi(x) \to x_{k+1}=\varphi(x_k)
+    \end{equation}
+  \item 迭代函数$\varphi(x_k)$, 不动点$x^*$
+\end{itemize}
+% paragraph 一元方程的基本迭代法 (end)
+\begin{theorem}
+  (迭代法的基本收敛性定理/全局性收敛定理)
+  \begin{itemize}
+    \item 映内性
+      \begin{equation}
+        a\le \varphi(x) \le b, \forall x\in[a,b]
+      \end{equation}
+    \item 压缩性
+      \begin{equation}
+        |\varphi'(x)|\le L < 1, \forall x\in[a,b]
+      \end{equation}
+    \item 适定性
+    \item 迭代终止准则
+      \begin{equation}
+        \frac{|x_k-x_{k-1}|}{|x_k|+1}< \epsilon
+      \end{equation}
+  \end{itemize}
+\end{theorem}
+\begin{eg}
+  (讨论迭代法的收敛性)
+\end{eg}
 % subsection 基本迭代法及其收敛性 (end)
 
 \subsection{局部收敛性和收敛阶}
+\begin{definition}
+  (局部收敛)
+\end{definition}
+\begin{theorem}
+  (局部收敛性定理/充分条件)
+  \begin{equation}
+    |\varphi'(x)|<1
+  \end{equation}
+\end{theorem}
+\begin{definition}
+  (收敛阶)
+  \begin{equation}
+    \begin{aligned}
+      \lim_{k\to \infty} \frac{e_{k+1}}{e^p_k}=c \\
+      e_k=x_k - x^*
+    \end{aligned}
+  \end{equation}
+  \begin{itemize}
+    \item $p$阶收敛
+    \item $p=1$, 线性收敛
+    \item $p>1$, 超线性收敛
+    \item $p=2$, 二次收敛/平方收敛
+  \end{itemize}
+\end{definition}
+\begin{lemma}
+  (线性收敛)
+  \begin{equation}
+    0<|\varphi'(x)|<1
+  \end{equation}
+\end{lemma}
+\begin{eg}
+  (线性收敛速度很慢)
+\end{eg}
+\begin{theorem}
+  (整数阶超线性收敛/$p$阶收敛)
+  \begin{equation}
+    \begin{aligned}
+      \varphi^{(l)}(x^*)=0, l=1,2,\ldots,p-1 \\
+      \varphi^{(p)}(x^*)\ne0
+    \end{aligned}
+  \end{equation}
+\end{theorem}
+\begin{eg}
+  (平方收敛比线性收敛快得多)
+\end{eg}
 % subsection 局部收敛性和收敛阶 (end)
 
 \subsection{收敛性的改善}\label{sub:label_name}
-Steffensen迭代法
+\paragraph{Steffensen迭代法}
+\begin{equation}
+  \begin{aligned}
+    y_k = \varphi(x_k)\\
+    z_k = \varphi(y_k)\\
+    x_{k+1} = x_k - \frac{{(y_k-x_k)}^2}{z_k-2y_k+x_k}
+  \end{aligned}
+\end{equation}
+% paragraph Steffensen迭代法 (end)
+\begin{eg}
+  (将迭代函数改造为Steffensen迭代法)
+\end{eg}
+\begin{theorem}
+  \begin{itemize}
+    \item 只要$\varphi'(x)\ne1$, 不管原迭代法是否收敛, 由其构成的Stefensen方法至少平方收敛
+    \item 若原迭代法的收敛阶已经大于等于2, 则可不必使用Stefensen迭代法
+  \end{itemize}
+\end{theorem}
 % subsection 收敛性的改善 (end)
+\begin{eg}
+  (用发散的迭代函数构造Steffensen迭代法)
+\end{eg}
 % section 误差的基本概念 (end)
 
 \section{一元方程牛顿迭代法}
 \subsection{牛顿迭代法及其收敛性}
 牛顿迭代法
-\begin{equation*}
+\paragraph{牛顿迭代法/切线法}
+\begin{equation}
   x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}
-\end{equation*}
+\end{equation}
+% paragraph 牛顿迭代法/切线法 (end)
+\begin{eg}
+  (用牛顿迭代法求解)
+\end{eg}
+\begin{theorem}
+  (牛顿法至少二次收敛)
+\end{theorem}
+\begin{eg}
+  (对于某些非线性方程, 牛顿法具有全局收敛性)
+\end{eg}
 % subsection 牛顿迭代法及其收敛性 (end)
 
 \subsection{重根时的牛顿迭代改善}
 方法1 (构造$\mu(x)$使得$x^*$为$\mu(x)$的单根)
-\begin{equation*}
+\begin{equation}
   \begin{aligned}
     \mu(x) &= \frac{f(x)}{f'(x)} \\
     x_{k+1} &= x_k - \frac{\mu(x_k)}{\mu'(x_k)}
   \end{aligned}
-\end{equation*}
+\end{equation}
 
 方法2 (需要已知根的重数$m$, 不实用)
-\begin{equation*}
+\begin{equation}
   x_{k+1} = \varphi(x_k) = x_k - m \frac{f(x_k)}{f'(x_k)}
-\end{equation*}
+\end{equation}
 % subsection 重根时的牛顿迭代改善 (end)
 
 \subsection{离散牛顿法}
 将导数换为$x_k$与$x_{k-1}$的差分公式
-\begin{equation*}
+\begin{equation}
   x_{k+1} = x_k - \frac{x_k - x_{k-1}}{f(x_k) - f(x_{k-1})} f(x_k)
-\end{equation*}
+\end{equation}
 % subsection 离散牛顿法 (end)
 % section 一元方程牛顿迭代法 (end)
 
@@ -174,9 +267,9 @@ Steffensen迭代法
 % subsection 不动点迭代法 (end)
 
 \subsection{牛顿迭代法}
-\begin{equation*}
+\begin{equation}
   x^{(k+1)} = x^{(k)} - F'(x^{(k)})^{-1} F(x^{(k)})
-\end{equation*}
+\end{equation}
 
 \begin{itemize}
   \item 牛顿方程

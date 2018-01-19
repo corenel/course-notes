@@ -1,3 +1,8 @@
+# Trash
+.DS_Store
+
+**/*_vimtex_selected.tex
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
@@ -218,3 +223,4 @@ TSWLatexianTemp*
 
 # expex forward references with \gathertags
 *-tags.tex
+*.xdv
