@@ -16,7 +16,7 @@
 %
 
 \usepackage{xeCJK}
-\usepackage{amsmath,amsfonts,amsthm,graphicx}
+\usepackage{amsmath,amsfonts,amsthm,amssymb,graphicx}
 \usepackage{mathtools}
 \usepackage{color}   %May be necessary if you want to color links
 \usepackage{hyperref}
@@ -93,6 +93,7 @@
 \newtheorem{claim}{Claim}[section]
 \newtheorem{corollary}{推论}[section]
 \newtheorem{definition}{定义}[section]
+\newtheorem{eg}{例}[section]
 % \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
 
 % **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
@@ -100,7 +101,7 @@
 \begin{document}
 %FILL IN THE RIGHT INFO.
 %\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
-\lecture{9}{}{Zhitao Liu}{Yusu Pan}
+\lecture{9}{矩阵特征值问题的数值解法}{Zhitao Liu}{Yusu Pan}
 %\footnotetext{These notes are partially based on those of Nigel Mansell.}
 
 % **** YOUR NOTES GO HERE:
@@ -110,46 +111,202 @@
 %**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
 %**** ARE NEVER READ BY ANYBODY.
 
-\section{xxx}
-
-% section xxx (end)
-
-\section{yyy}
-
-% section yyy (end)
-
-\section{矩阵的QR分解}
+\section{引言}
+\subsection{问题的背景和内容概要}
+\begin{itemize}
+  \item 特征方程, 特征值, 特征向量
+  \item 本章介绍两类实用迭代法--幂法 (及其变形)和QR算法. 前者主要用于求部分特征值和特征向量, 后者用于求全部特征值和特征向量.
+\end{itemize}
+% subsection 问题的背景和内容概要 (end)
+\subsection{特征值的扰动和条件数}
 \begin{theorem}
-  (QR分解定理)(可能出题)
+  (扰动后的矩阵特征值误差)
 \end{theorem}
+\begin{itemize}
+  \item 矩阵特征值的条件数
+  \item 病态矩阵
+\end{itemize}
+% subsection 特征值的扰动和条件数 (end)
+% section 引言 (end)
+
+\section{幂法及其变形}
+\subsection{幂法和外推加速}
+\begin{itemize}
+  \item 主特征值 (模最大), 主特征向量
+  \item 幂法的原始形式
+    \begin{equation}
+      \begin{aligned}
+        v_k &= A v_{k-1} = A^k v_0 \\
+            &\approx \lambda^k \alpha_1 x_1, \frac{{ (v_{k+1}) }_l}{{ (v_k) }_l}\approx \lambda_1
+      \end{aligned}
+    \end{equation}
+\end{itemize}
+\begin{algo}
+  (幂法)
+  \begin{itemize}
+    \item 取$u_0 = [1,\ldots,1]^T$
+    \item 迭代过程
+      \begin{enumerate}
+        \item $v_k = A u_{k-1}$
+        \item $m_k=\max{(v_k)}$
+        \item $u_k=v_k/m_k$
+        \item 当$\frac{|m_k-m_{k-1}|}{1+|m_k|}<\epsilon$时终止, $u_k$为$x_1$, $m_k$为$\lambda$
+      \end{enumerate}
+  \end{itemize}
+\end{algo}
+\begin{theorem}
+  (幂法的收敛性1)
+\end{theorem}
+\begin{eg}
+  (用幂法求主特征值和主特征向量)
+\end{eg}
+\begin{theorem}
+  (幂法的收敛性2)
+\end{theorem}
+\begin{algo}
+  (外推加速的幂法/Aitken外推法)
+  \begin{itemize}
+    \item 取$u_0 = [1,\ldots,1]^T$
+    \item 迭代过程
+      \begin{enumerate}
+        \item $v_k = A u_{k-1}$
+        \item $m_k=\max{(v_k)}$
+          \begin{equation}
+            \tilde{m}_k=m_{k-2} - \frac{{(m_{k-1}-m_{k-2})}^2}{m_k-2m_{k-1}+m_{k-2}}
+          \end{equation}
+        \item $u_k=v_k/m_k$
+        \item 当$\frac{|\tilde{m}_k-\tilde{m}_{k-1}|}{1+|\tilde{m}_k|}<\epsilon$时终止, 并计算$\tilde{u}_k$
+          \begin{equation}
+            { (\tilde{u}_k) }_j =
+            \begin{cases}{}
+              1, &{(u_k)}_j=1 \\
+              { (u_{k-2}) }_j - \frac{{ [{ (u_{k-1}) }_j-{ (u_{k-2}) }_j] }^2}{{ (u_k) }_j-2{ (u_{k-1}) }_j+{ (u_{k-2}) }_j}, &{(u_k)}_j\ne1 \\
+            \end{cases}
+          \end{equation}
+      \end{enumerate}
+  \end{itemize}
+\end{algo}
+% subsection 幂法和外推加速 (end)
+\subsection{反幂法和原点位移}
+\begin{itemize}
+  \item 反幂法: 求$A$的最小特征值及特征向量, 只需对$A^{-1}$使用幂法
+    \begin{equation}
+      \begin{cases}{}
+        v_k = A^{-1}u_{k-1} \\
+        m_k = \max{(v_k)} \\
+        u_k = v_k / m_k
+      \end{cases}
+    \end{equation}
+  \item 原点位移的反幂法: 求$A$距离点$s$严格最近的特征值
+    \begin{equation}
+      \begin{cases}{}
+        v_k = {(A-sI)}^{-1}u_{k-1} \\
+        m_k = \max{(v_k)} \\
+        u_k = v_k / m_k
+      \end{cases}
+    \end{equation}
+  \item 动态原点位移: 使用原点位移的反幂法对幂法加速
+\end{itemize}
+\begin{eg}
+  (用反幂法和原点位移的反幂法求解)
+\end{eg}
+\begin{eg}
+  (动态原点位移)
+\end{eg}
+% subsection 反幂法和原点位移 (end)
+\subsection{对称矩阵的修正幂法}
+\begin{algo}
+  (实对称矩阵的修正幂法)
+  \begin{itemize}
+    \item 取$u_0 = \frac{1}{\sqrt{n}} {[1,\ldots,1]}^T$
+    \item 迭代过程
+      \begin{enumerate}
+        \item $v_k = A u_{k-1}$
+        \item $m_k=v_k^T u_{k-1}$
+        \item $u_k=v_k/{ \|v_k\| }_2$
+        \item 当$\frac{|m_k-m_{k-1}|}{1+|m_k|}<\epsilon$时终止
+      \end{enumerate}
+  \end{itemize}
+\end{algo}
+\begin{eg}
+  (幂法与修正幂法的对比)
+\end{eg}
+% subsection 对称矩阵的修正幂法 (end)
+% section 幂法及其变形 (end)
+
+\section{矩阵的两种正交变换}
+\subsection{平面旋转变换和镜面反射变换}
+\begin{definition}
+  (平面旋转变换/Givens变换矩阵)
+\end{definition}
+\begin{theorem}
+  (平面旋转矩阵的性质)
+\end{theorem}
+\begin{eg}
+  (构造平面旋转矩阵)
+\end{eg}
+\begin{definition}
+  (初等镜面反射矩阵/Householder变换矩阵)
+\end{definition}
+\begin{theorem}
+  (构造镜面反射矩阵1)
+\end{theorem}
+\begin{lemma}
+  (构造镜面反射矩阵2)
+\end{lemma}
+\begin{eg}
+  (构造镜面反射矩阵)
+\end{eg}
+\begin{lemma}
+  (构造镜面反射矩阵3)
+\end{lemma}
+\paragraph{矩阵的收缩方法}
+% paragraph 矩阵的收缩方法 (end)
+% subsection 平面旋转变换和镜面反射变换 (end)
+\subsection{化矩阵为Hessenberg形}
+\begin{definition}
+  (Hessenberg矩阵/可约与不可约)
+\end{definition}
+\begin{theorem}
+  任何实方阵都可以通过正交相似变化化为Henssenberg形
+  \begin{equation}
+    B=Q^T AQ
+  \end{equation}
+\end{theorem}
+% subsection 化矩阵为Hessenberg形 (end)
+\subsection{矩阵的QR分解}
+\begin{theorem}
+  (QR分解定理$\bigstar$)
+  \begin{equation}
+    \begin{aligned}
+      A=QR \\
+      R=A_n, Q=H_1 H_2 \cdots H_{n-1}
+    \end{aligned}
+  \end{equation}
+\end{theorem}
+% subsection 矩阵的QR分解 (end)
 % section 矩阵的QR分解 (end)
 
 \section{QR算法}
-\subsection{基本QR算法}
+\subsection{QR算法及其收敛性}
 \begin{theorem}
   (Schur分块上三角)
 \end{theorem}
-
 \begin{algo}
   (基本QR算法)
 \end{algo}
-
 \begin{theorem}
   (基本QR算法的性质)
 \end{theorem}
-
 \begin{lemma}
-
 \end{lemma}
-
 \begin{theorem}
   (QR算法的收敛性)
 \end{theorem}
-
 \begin{theorem}
   (QR算法求$A$的全部特征值)
 \end{theorem}
-% subsection 基本QR算法 (end)
+% subsection QR算法及其收敛性 (end)
 
 \subsection{QR算法的改善}
 \begin{itemize}
@@ -160,8 +317,7 @@
 \end{itemize}
 % subsection QR算法的改善 (end)
 
-\subsection{双步隐式QR算法}
-(考试不考)
+\subsection{双步隐式QR算法*}
 \begin{algo}
   (双步隐式QR变换)
 \end{algo}
@@ -170,7 +326,5 @@
 \end{algo}
 % subsection 双步隐式QR算法 (end)
 % section QR算法 (end)
-
-
 \end{document}
 
