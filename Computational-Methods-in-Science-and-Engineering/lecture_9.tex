@@ -294,6 +294,14 @@
 \end{theorem}
 \begin{algo}
   (基本QR算法)
+  \begin{itemize}
+    \item 初始化: $A_1$为$A$的Hessenberg形
+    \item QR变换
+      \begin{enumerate}
+        \item $A_k=Q_kR_k$ (QR分解)
+        \item $A_{k+1}=Q^T_k A_k Q_k = R_k Q_k$ (正交相似变换)
+      \end{enumerate}
+  \end{itemize}
 \end{algo}
 \begin{theorem}
   (基本QR算法的性质)
@@ -313,6 +321,7 @@
   \item 划分和收缩
   \item 原点位移
     \begin{algo}
+      (原点位移的QR变换)
     \end{algo}
 \end{itemize}
 % subsection QR算法的改善 (end)
