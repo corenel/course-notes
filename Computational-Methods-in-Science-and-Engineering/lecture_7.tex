@@ -193,9 +193,9 @@
 \paragraph{Steffensen迭代法}
 \begin{equation}
   \begin{aligned}
-    y_k = \varphi(x_k)\\
-    z_k = \varphi(y_k)\\
-    x_{k+1} = x_k - \frac{{(y_k-x_k)}^2}{z_k-2y_k+x_k}
+    y_k &= \varphi(x_k)\\
+    z_k &= \varphi(y_k)\\
+    x_{k+1} &= x_k - \frac{{(y_k-x_k)}^2}{z_k-2y_k+x_k}
   \end{aligned}
 \end{equation}
 % paragraph Steffensen迭代法 (end)
@@ -234,56 +234,119 @@
 % subsection 牛顿迭代法及其收敛性 (end)
 
 \subsection{重根时的牛顿迭代改善}
-方法1 (构造$\mu(x)$使得$x^*$为$\mu(x)$的单根)
-\begin{equation}
-  \begin{aligned}
-    \mu(x) &= \frac{f(x)}{f'(x)} \\
-    x_{k+1} &= x_k - \frac{\mu(x_k)}{\mu'(x_k)}
-  \end{aligned}
-\end{equation}
+\begin{itemize}
+  \item 方法1 (构造$\mu(x)$使得$x^*$为$\mu(x)$的单根)
+    \begin{equation}
+      \begin{aligned}
+        \mu(x) &= \frac{f(x)}{f'(x)} \\
+        x_{k+1} &= x_k - \frac{\mu(x_k)}{\mu'(x_k)}
+      \end{aligned}
+    \end{equation}
+  \item 方法2
+    \begin{equation}
+      x_{k+1} = \varphi(x_k) = x_k - m \frac{f(x_k)}{f'(x_k)}
+    \end{equation}
+  \item 方法1需要求函数的二阶导数, 并且当所求根为单根时, 不能改善本来已经二次收敛的牛顿法; 方法2需要已知根的重数$m$, 不实用.
+  \item 对于实际问题, 往往事先并不知道所求根是否是重根, 需要通过试算来判断, 如当牛顿法收敛很慢时通常为重根.
+\end{itemize}
 
-方法2 (需要已知根的重数$m$, 不实用)
-\begin{equation}
-  x_{k+1} = \varphi(x_k) = x_k - m \frac{f(x_k)}{f'(x_k)}
-\end{equation}
 % subsection 重根时的牛顿迭代改善 (end)
 
-\subsection{离散牛顿法}
-将导数换为$x_k$与$x_{k-1}$的差分公式
+\subsection{离散牛顿法/割线法}
+当不想每步都计算导数, 或者函数不可导时, 用割线的斜率来代替牛顿法中的切线的斜率, 即将导数换为$x_k$与$x_{k-1}$的差分公式
 \begin{equation}
   x_{k+1} = x_k - \frac{x_k - x_{k-1}}{f(x_k) - f(x_{k-1})} f(x_k)
 \end{equation}
+\begin{itemize}
+  \item 需要两个初始值$x_0$和$x_1$, 应尽量取在方程$f(x)=0$的根$x^*$附近. 
+\end{itemize}
+\begin{eg}
+  (用离散牛顿法求解)
+\end{eg}
 % subsection 离散牛顿法 (end)
 % section 一元方程牛顿迭代法 (end)
 
 \section{非线性方程的解法}\label{sec:fei_xian_xin_fang_chen_de_jie_fa_}
+\begin{equation}
+  \begin{aligned}
+    F(x)&=0 \\
+    x&={ [x_1, \ldots, x_n] }^T\\
+    F(x)&={ [f_1(x), \ldots, f_n(x)] }^T
+  \end{aligned}
+\end{equation}
 \subsection{不动点迭代法}
 \begin{itemize}
-  \item 映内, 压缩
-  \item 不动点存在定理, 压缩映射定理
-  \item 局部收敛
+  \item 不动点迭代法
+    \begin{equation}
+      x_{k+1}=\Phi(x_k)
+    \end{equation}
   \item Jacobi矩阵
 \end{itemize}
+\begin{definition}
+  (映内, 压缩, 压缩系数$L$)
+\end{definition}
+\begin{theorem}
+  (Brouwer不动点存在定理)
+\end{theorem}
+\begin{theorem}
+  (压缩映射原理)
+\end{theorem}
+\begin{definition}
+  (局部收敛)
+\end{definition}
+\begin{theorem}
+  (局部收敛的充分条件1/Jacobi矩阵)
+\end{theorem}
+\begin{theorem}
+  (局部收敛的充分条件2)
+\end{theorem}
+\begin{lemma}
+  (局部收敛的充分条件3)
+  \begin{itemize}
+    \item 若$\Phi'(x)$存在, 且$\|\Phi'(x^*)\|<1$, 则迭代法在$x^*$处局部收敛
+    \item 若有$x^*$的邻域$S\of D$, $\Phi'(x)$存在, 且$\|\Phi'(x)\|<1$, 则迭代法在$x^*$处局部收敛
+  \end{itemize}
+\end{lemma}
+\begin{eg}
+  (判断是否局部收敛)
+\end{eg}
 % subsection 不动点迭代法 (end)
-
 \subsection{牛顿迭代法}
+\begin{definition}
+  (收敛阶)
+\end{definition}
 \begin{equation}
   x^{(k+1)} = x^{(k)} - F'(x^{(k)})^{-1} F(x^{(k)})
 \end{equation}
-
-\begin{itemize}
-  \item 牛顿方程
-  \item 阻尼牛顿法: $F'(x^*)$奇异或病态时可用, 阻尼因子, 阻尼项
-\end{itemize}
 % subsection 牛顿迭代法 (end)
 
 \subsection{牛顿点迭代法}
-用迭代法求解非线性方程组, 特别是非线性方程组时, 初始值的选取至关重要, 初值不仅影响迭代是否收敛, 而且当方程多解时, 不同的初值可能收敛到不同的解.
-
-牛顿迭代函数
+\paragraph{牛顿点迭代法}
+  \begin{equation}
+    x^{(k+1)}=\Phi(x^{(k)}), \Phi(x)=x - {F'(x)}^{-1} F(x)
+  \end{equation}
+% paragraph 牛顿点迭代法 (end)
+\begin{theorem}
+  (牛顿迭代法的局部收敛性)
+\end{theorem}
+\begin{itemize}
+  \item 牛顿方程
+  \item 阻尼牛顿法: $F'(x^*)$奇异或病态时可用, 阻尼因子, 阻尼项
+  \item 用迭代法求解非线性方程组, 特别是非线性方程组时, 初始值的选取至关重要, 初值不仅影响迭代是否收敛, 而且当方程多解时, 不同的初值可能收敛到不同的解.
+\end{itemize}
+\begin{eg}
+  (用牛顿法与阻尼牛顿法求解)
+\end{eg}
+\begin{eg}
+  (初值对牛顿法的影响)
+\end{eg}
 % subsection 牛顿点迭代法 (end)
 
 \subsection{拟牛顿法}
+\subsubsection{Broyden秩1方法}
+% subsubsection Broyden秩1方法 (end)
+\subsubsection{对称拟牛顿法}
+% subsubsection 对称拟牛顿法 (end)
 % subsection 拟牛顿法 (end)
 % section 非线性方程的解法 (end)
 \end{document}
